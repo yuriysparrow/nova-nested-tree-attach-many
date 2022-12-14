@@ -24,7 +24,7 @@ class NestedTreeAttachManyField extends Field
 
     public $showOnIndex = false;
 
-    public function __construct($name, $attribute = null, $resource = null)
+    public function __construct($name, $attribute = null, $resource = null, $parentId = null)
     {
         parent::__construct($name, $attribute);
 
@@ -86,8 +86,11 @@ class NestedTreeAttachManyField extends Field
                 $query = $this->resourceClass::buildIndexQuery(
                     App::make(NovaRequest::class), $this->resourceClass::newModel()->newQuery()
                 );
-
-                $forRequestCache->put($tag, $query->get()->toTree());
+                if($parentId) {
+                    $forRequestCache->put($tag, $query->descendantsAndSelf($parentId)->toTree());
+                } else {
+                    $forRequestCache->put($tag, $query->get()->toTree());
+                }
             }
 
             $this->withMeta([
