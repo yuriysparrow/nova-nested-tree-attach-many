@@ -87,7 +87,7 @@ class NestedTreeAttachManyField extends Field
                     App::make(NovaRequest::class), $this->resourceClass::newModel()->newQuery()
                 );
                 if($parentId) {
-                    $forRequestCache->put($tag, $query->descendantsAndSelf($parentId)->toTree());
+                    $forRequestCache->put($tag, $query->find($parentId)->descendantsWithSelf()->get()->toTree());
                 } else {
                     $forRequestCache->put($tag, $query->get()->toTree());
                 }
